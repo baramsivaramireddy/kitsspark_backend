@@ -1,0 +1,10 @@
+const router = require("express").Router();
+const path = require('path');
+const departmentController = require(path.resolve(CONTROLLER_DIR, 'department'));
+const { authenticationMiddleware, authorizationMiddleware } = require(path.resolve(MIDDLEWARE, 'auth'));
+router.get("/" , authenticationMiddleware ,departmentController.search );
+router.post("/" , authenticationMiddleware ,departmentController.create);
+router.put('/:id' ,authenticationMiddleware, departmentController.update);
+router.get('/:id', authenticationMiddleware,departmentController.find);
+router.delete("/:id" ,authenticationMiddleware ,departmentController.delete);
+module.exports = router;
