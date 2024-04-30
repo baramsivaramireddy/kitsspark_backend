@@ -54,7 +54,7 @@ module.exports = {
         let newUser = await User.create({ email: userEmail, name:userName, sub: userSub, role: ADMINROLE });
 
         let token = await jwt.sign({ userId: newUser._id, role: newUser.role }, __configurations.SECRETKEY, { expiresIn: TOKENEXPIRE });
-        return res.status(200).json({ token: token });
+        return res.status(201).json({ token: token });
       }
 
 
@@ -74,7 +74,7 @@ module.exports = {
         let newUser = await User.create({ email: userEmail, sub: userSub, role: STUDENTROLE });
 
         let token = await jwt.sign({ userId: newUser._id, role: newUser.role }, __configurations.SECRETKEY, { expiresIn: TOKENEXPIRE });
-        return res.status(200).json({ token: token });
+        return res.status(201).json({ token: token });
       }
 
       let teacherUser = await Teacher.findOne({ email: userEmail });
@@ -83,7 +83,7 @@ module.exports = {
         let newUser = await User.create({ email: userEmail, sub: userSub, role: TEACHERROLE });
 
         let token = await jwt.sign({ userId: newUser._id, role: newUser.role }, __configurations.SECRETKEY, { expiresIn: TOKENEXPIRE });
-        return res.status(200).json({ token: token });
+        return res.status(201).json({ token: token });
       }
 
       let expertUser = await Expert.findOne({ email: userEmail });
@@ -92,12 +92,12 @@ module.exports = {
         let newUser = await User.create({ email: userEmail, sub: userSub, role: EXPERTROLE });
 
         let token = await jwt.sign({ userId: newUser._id, role: newUser.role }, __configurations.SECRETKEY, { expiresIn: TOKENEXPIRE });
-        return res.status(200).json({ token: token });
+        return res.status(201).json({ token: token });
       }
       let newUser = await User.create({ email: userEmail, sub: userSub, role: OUTSIDERROLE });
 
       let token = await jwt.sign({ userId: newUser._id, role: newUser.role }, __configurations.SECRETKEY, { expiresIn: TOKENEXPIRE });
-      return res.status(200).json({ token: token });
+      return res.status(201).json({ token: token });
 
     } catch (error) {
       console.error(error);
@@ -112,7 +112,7 @@ module.exports = {
       await dbconnect();
       const userId = req.params.id;
 
-      const user = await User.findById(userId).populate('role');
+      const user = await User.findById(userId);
 
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -131,7 +131,7 @@ module.exports = {
   search: async (req, res) => {
     try {
       await dbconnect();
-      const users = await User.find().populate('role');
+      const users = await User.find();
       res.status(200).json({ count: users.length, data: users });
     } catch (error) {
       console.error(error);

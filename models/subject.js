@@ -35,6 +35,11 @@ const subjectSchema = new Schema({
     year:{
         type : String,
         enum: ['1' ,'2' , '3','4' , 'common'] 
+    },
+    regulationId:{
+        type :Schema.Types.ObjectId ,
+        ref: 'regulation',
+        required: true
     }
 
 })

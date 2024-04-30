@@ -56,7 +56,7 @@ module.exports = {
 
 
             const id = req.params.id;
-            let expertDoc = await expert.findbyIdAndUpdate(id, req.body);
+            let expertDoc = await expert.findByIdAndUpdate(id, req.body);
             res.status(201).json({ message: 'updated successfullu' });
         } catch (err) {
             console.log(`Error occured while creating a expert`)
@@ -71,7 +71,7 @@ module.exports = {
 
 
             const id = req.params.id;
-            let expertDoc = await expert.findbyIdAndDelete(id);
+            let expertDoc = await expert.findByIdAndDelete(id);
             await User.findOneAndDelet({ email: expertDoc.email });
             res.status(201).json({ message: 'deleted successfullu' });
         } catch (err) {

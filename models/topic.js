@@ -17,7 +17,7 @@ const unitSchema = new Schema({
     },
     unitId:{
         type: Schema.Types.ObjectId,
-        ref: 'subject',
+        ref: 'unit',
         required: true
     }
 

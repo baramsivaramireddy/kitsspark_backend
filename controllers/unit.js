@@ -56,7 +56,7 @@ module.exports = {
 
 
             const id = req.params.id;
-            let unitDoc = await unit.findbyIdAndUpdate(id, req.body);
+            let unitDoc = await unit.findByIdAndUpdate(id, req.body);
             res.status(201).json({ message: 'updated successfullu' });
         } catch (err) {
             console.log(`Error occured while creating a unit`)
@@ -71,7 +71,7 @@ module.exports = {
 
 
             const id = req.params.id;
-            let unitDoc = await unit.findbyIdAndDelete(id);
+            let unitDoc = await unit.findByIdAndDelete(id);
             await User.findOneAndDelet({ email: unitDoc.email });
             res.status(201).json({ message: 'deleted successfullu' });
         } catch (err) {

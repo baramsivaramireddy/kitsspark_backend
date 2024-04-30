@@ -56,7 +56,7 @@ module.exports = {
 
 
             const id = req.params.id;
-            let subjectDoc = await subject.findbyIdAndUpdate(id, req.body);
+            let subjectDoc = await subject.findByIdAndUpdate(id, req.body);
             res.status(201).json({ message: 'updated successfullu' });
         } catch (err) {
             console.log(`Error occured while creating a subject`)
@@ -71,7 +71,7 @@ module.exports = {
 
 
             const id = req.params.id;
-            let subjectDoc = await subject.findbyIdAndDelete(id);
+            let subjectDoc = await subject.findByIdAndDelete(id);
             await User.findOneAndDelet({ email: subjectDoc.email });
             res.status(201).json({ message: 'deleted successfullu' });
         } catch (err) {

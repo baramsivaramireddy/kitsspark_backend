@@ -8,6 +8,7 @@ const articleSchema = new Schema({
     TargetType: {
         type: String,
         required: true
+        // EVENT , TOPIC
     },
     TargetId:{
         type: Schema.Types.ObjectId,

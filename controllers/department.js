@@ -56,7 +56,7 @@ module.exports = {
 
 
             const id = req.params.id;
-            let departmentDoc = await department.findbyIdAndUpdate(id, req.body);
+            let departmentDoc = await department.findByIdAndUpdate(id, req.body);
             res.status(201).json({ message: 'updated successfullu' });
         } catch (err) {
             console.log(`Error occured while creating a department`)
@@ -71,7 +71,7 @@ module.exports = {
 
 
             const id = req.params.id;
-            let departmentDoc = await department.findbyIdAndDelete(id);
+            let departmentDoc = await department.findByIdAndDelete(id);
             await User.findOneAndDelet({ email: departmentDoc.email });
             res.status(201).json({ message: 'deleted successfullu' });
         } catch (err) {

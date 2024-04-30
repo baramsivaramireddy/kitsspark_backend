@@ -56,7 +56,7 @@ module.exports = {
 
 
             const id = req.params.id;
-            let topicDoc = await topic.findbyIdAndUpdate(id, req.body);
+            let topicDoc = await topic.findByIdAndUpdate(id, req.body);
             res.status(201).json({ message: 'updated successfullu' });
         } catch (err) {
             console.log(`Error occured while creating a topic`)
@@ -71,7 +71,7 @@ module.exports = {
 
 
             const id = req.params.id;
-            let topicDoc = await topic.findbyIdAndDelete(id);
+            let topicDoc = await topic.findByIdAndDelete(id);
             await User.findOneAndDelet({ email: topicDoc.email });
             res.status(201).json({ message: 'deleted successfullu' });
         } catch (err) {

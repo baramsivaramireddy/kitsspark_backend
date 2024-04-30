@@ -13,7 +13,17 @@ tags:
   - name: common
   - name: user
   - name: upload
-
+  - name: department
+  - name: regulation
+  - name: student
+  - name: teacher
+  - name: expert
+  - name: subject
+  - name: unit
+  - name: topic
+  - name: article
+  - name: event
+  - name: noticeboard
 
 paths:
   /health-check:
@@ -26,9 +36,10 @@ paths:
         500:
           description: Something bad happened
 
-  /api/user/signup:
+  /apis/user/login:
     post:
-      summary: Signup a new user
+      summary: login the user
+      description : sign in or login the user . first one to sign up is admin . after that every time one tries to  login . email is checked againt the teacher model,student model , expert model . Then jwt is generated based on the user email 
       tags:
         - user
       requestBody:
@@ -36,63 +47,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserSignup'
-      responses:
-        '201':
-          description: Created
-        '400':
-          description: User already exists or invalid data
-        '404':
-          description: Role not found
-        '500':
-          description: Internal Server Error
-
-  /api/user/login:
-    post:
-      summary: Login and generate JWT token
-      tags:
-        - user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserLogin'
+              type: object
+              properties:
+                credential:
+                  type : string
+                
       responses:
         '200':
-          description: Successful login
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-        '401':
-          description: Invalid credentials
-        '500':
-          description: Internal Server Error
-
-  /api/user:
-    post:
-      summary: Create a new user
-      tags:
-        - user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserCreate'
-      responses:
+          description: jwt token is generated
         '201':
-          description: Created
+          description: new user is created and jwt is generated
         '400':
-          description: User already exists or invalid data
-        '404':
-          description: Role not found
+          description: id token is missed
         '500':
           description: Internal Server Error
+          
     get:
       summary: Get all users
       tags:
@@ -100,77 +69,26 @@ paths:
       responses:
         '200':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
-  /api/user/{id}:
-    get:
-      summary: Get a user by ID
-      tags:
-        - user
-      parameters:
+        '500':
+          description: Internal Server Error
+  /apis/user/{userId}:
+    parameters:
         - in: path
-          name: id
+          name: userId
           required: true
           schema:
-            type: string
+            type: string  
+    get:
+      summary: get a user
+      tags:
+        - user
       responses:
         '200':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '404':
-          description: User not found
         '500':
           description: Internal Server Error
-
-    put:
-      summary: Update a user by ID
-      tags:
-        - user
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserUpdate'
-      responses:
-        '200':
-          description: Updated successfully
-        '404':
-          description: User not found
-        '500':
-          description: Internal Server Error
-
-    delete:
-      summary: Delete a user by ID
-      tags:
-        - user
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Deleted successfully
-        '404':
-          description: User not found
-        '500':
-          description: Internal Server Error
-  /api/upload:
+          
+  /apis/upload:
     post:
       tags:
         - upload
@@ -219,48 +137,42 @@ paths:
                   error:
                     type: string
                     description: Error message
-
-
-  /api/role:
+          
+  /apis/department:
     post:
-      summary: Create a new role
+      summary: Create a department
       tags:
-        - role
+        - department
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Role'
+              type: object
+              properties:
+                name: 
+                  type: string
       responses:
         '201':
           description: Created
-        '422':
-          description: Invalid data
         '500':
           description: Internal Server Error
 
     get:
-      summary: Get all roles
+      summary: Get all department
       tags:
-        - role
+        - department
       responses:
         '200':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Role'
         '500':
           description: Internal Server Error
 
-  /api/role/{id}:
+  /api/department/{id}:
     get:
-      summary: Get a role by ID
+      summary: Get a department by ID
       tags:
-        - role
+        - department
       parameters:
         - in: path
           name: id
@@ -270,19 +182,15 @@ paths:
       responses:
         '200':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Role'
         '404':
           description: Not Found
         '500':
           description: Internal Server Error
 
     put:
-      summary: Update a role by ID
+      summary: Update a department by ID
       tags:
-        - role
+        - department
       parameters:
         - in: path
           name: id
@@ -294,7 +202,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Role'
+              type: object
+              properties:
+                name:
+                  type: string
       responses:
         '200':
           description: Updated successfully
@@ -304,9 +215,9 @@ paths:
           description: Internal Server Error
 
     delete:
-      summary: Delete a role by ID
+      summary: Delete a department by ID
       tags:
-        - role
+        - department
       parameters:
         - in: path
           name: id
@@ -320,95 +231,813 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
-components:
-  schemas:
+  /apis/regulation:
+    post:
+      summary: Create a regulation
+      tags:
+        - regulation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+      responses:
+        '201':
+          description: Created
+        '500':
+          description: Internal Server Error
 
-    Role:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the role
-    UserSignup:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the user
-        email:
-          type: string
-          description: Email of the user
-        password:
-          type: string
-          description: Password of the user
-        phoneNumber:
-          type: string
-          description: Phone number of the user
-        roleId:
-          type: string
-          description: ID of the role for the user
+    get:
+      summary: Get all regulations
+      tags:
+        - regulation
+      responses:
+        '200':
+          description: Successful operation
+        '500':
+          description: Internal Server Error
 
-    UserLogin:
-      type: object
-      properties:
-        email:
-          type: string
-          description: Email of the user
-        password:
-          type: string
-          description: Password of the user
+  /api/regulation/{id}:
+    get:
+      summary: Get a regulation by ID
+      tags:
+        - regulation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
 
-    UserCreate:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the user
-        email:
-          type: string
-          description: Email of the user
-        password:
-          type: string
-          description: Password of the user
-       
-        roleId:
-          type: string
-          description: ID of the role for the user
+    put:
+      summary: Update a regulation by ID
+      tags:
+        - regulation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
 
-    UserUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Updated name of the user
-        email:
-          type: string
-          description: Updated email of the user
-        password:
-          type: string
-          description: Updated password of the user
-       
-        roleId:
-          type: string
-          description: Updated ID of the role for the user
+    delete:
+      summary: Delete a regulation by ID
+      tags:
+        - regulation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /apis/student:
+    post:
+      summary: Create a student
+      tags:
+        - student
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+      responses:
+        '201':
+          description: Created
+        '500':
+          description: Internal Server Error
 
-    User:
-      type: object
-      properties:
-        _id:
-          type: string
-          description: ID of the user
-        name:
-          type: string
-          description: Name of the user
-        email:
-          type: string
-          description: Email of the user
-        password:
-          type: string
-          description: Password of the user
-        phoneNumber:
-          type: string
-          description: Phone number of the user
-        role:
-          $ref: '#/components/schemas/Role'
+    get:
+      summary: Get all student
+      tags:
+        - student
+      responses:
+        '200':
+          description: Successful operation
+        '500':
+          description: Internal Server Error
+
+  /apis/student/{id}:
+    get:
+      summary: Get a student by ID
+      tags:
+        - student
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update a student by ID
+      tags:
+        - student
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a student by ID
+      tags:
+        - student
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          
+  /apis/expert:
+    post:
+      summary: Create a expert
+      tags:
+        - expert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+      responses:
+        '201':
+          description: Created
+        '500':
+          description: Internal Server Error
+
+    get:
+      summary: Get all experts
+      tags:
+        - expert
+      responses:
+        '200':
+          description: Successful operation
+        '500':
+          description: Internal Server Error
+
+  /apis/expert/{id}:
+    get:
+      summary: Get a expert by ID
+      tags:
+        - expert
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update a expert by ID
+      tags:
+        - expert
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a expert by ID
+      tags:
+        - expert
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /apis/teacher:
+    post:
+      summary: Create a teacher
+      tags:
+        - teacher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+      responses:
+        '201':
+          description: Created
+        '500':
+          description: Internal Server Error
+
+    get:
+      summary: Get all teacher
+      tags:
+        - teacher
+      responses:
+        '200':
+          description: Successful operation
+        '500':
+          description: Internal Server Error
+
+  /apis/teacher/{id}:
+    get:
+      summary: Get a teacher by ID
+      tags:
+        - teacher
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update a teacher by ID
+      tags:
+        - teacher
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a teacher by ID
+      tags:
+        - teacher
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+
+  /apis/subject:
+    post:
+      summary: Create a subject
+      description: assingedToType can be either 'teacher' ,'expert' , year can be either '1' ,'2' , '3','4' , 'common'
+      tags:
+        - subject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                shortcutcode:
+                  type: string
+                image:
+                  type: string
+                assingedToType:
+                  type: string
+                assingedTo:
+                  type: string
+                isSOC: 
+                  type: string
+                isLAB:
+                  type: string
+                year:
+                  type: string
+                regulationId:
+                  type: string
+      responses:
+        '201':
+          description: Created
+        '500':
+          description: Internal Server Error
+
+    get:
+      summary: Get all subjects
+      tags:
+        - subject
+      responses:
+        '200':
+          description: Successful operation
+        '500':
+          description: Internal Server Error
+
+  /apis/subject/{id}:
+    get:
+      summary: Get a subject by ID
+      tags:
+        - subject
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update a subject by ID
+      tags:
+        - subject
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                shortcutcode:
+                  type: string
+                image:
+                  type: string
+                assingedToType:
+                  type: string
+                assingedTo:
+                  type: string
+                isSOC: 
+                  type: string
+                isLAB:
+                  type: string
+                year:
+                  type: string
+                regulationId:
+                  type: string
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a subject by ID
+      tags:
+        - subject
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          
+  /apis/unit:
+    post:
+      summary: Create a unit
+      tags:
+        - unit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                order:
+                  type: string
+                subjectId:
+                  type: string
+      responses:
+        '201':
+          description: Created
+        '500':
+          description: Internal Server Error
+
+    get:
+      summary: Get all units
+      tags:
+        - unit
+      responses:
+        '200':
+          description: Successful operation
+        '500':
+          description: Internal Server Error
+
+  /apis/unit/{id}:
+    get:
+      summary: Get a unit by ID
+      tags:
+        - unit
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update a unit by ID
+      tags:
+        - unit
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                order:
+                  type: string
+                subjectId:
+                  type: string
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a unit by ID
+      tags:
+        - unit
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /apis/topic:
+    post:
+      summary: Create a topic
+      tags:
+        - topic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                order:
+                  type: string
+                unitId:
+                  type: string
+      responses:
+        '201':
+          description: Created
+        '500':
+          description: Internal Server Error
+
+    get:
+      summary: Get all topic
+      tags:
+        - topic
+      responses:
+        '200':
+          description: Successful operation
+        '500':
+          description: Internal Server Error
+
+  /apis/topic/{id}:
+    get:
+      summary: Get a topic by ID
+      tags:
+        - topic
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update a topic by ID
+      tags:
+        - topic
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                order:
+                  type: string
+                unitId:
+                  type: string
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a topic by ID
+      tags:
+        - topic
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+ 
+  /apis/article:
+    post:
+      summary: Create a article
+      description: TargetType can be EVENT ,TOPIC
+      tags:
+        - article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                TargetType: 
+                  type: string
+                TargetId:
+                  type: string
+                data:
+                  type: string
+      responses:
+        '201':
+          description: Created
+        '500':
+          description: Internal Server Error
+
+    get:
+      summary: Get all article
+      tags:
+        - article
+      responses:
+        '200':
+          description: Successful operation
+        '500':
+          description: Internal Server Error
+
+  /apis/article/{id}:
+    get:
+      summary: Get a article by ID
+      tags:
+        - article
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update a topic by ID
+      tags:
+        - article
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                TargetType: 
+                  type: string
+                TargetId:
+                  type: string
+                data:
+                  type: string
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a article by ID
+      tags:
+        - article
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted successfully
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+ 
+  
+ 

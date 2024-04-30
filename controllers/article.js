@@ -56,7 +56,7 @@ module.exports = {
 
 
             const id = req.params.id;
-            let articleDoc = await article.findbyIdAndUpdate(id, req.body);
+            let articleDoc = await article.findByIdAndUpdate(id, req.body);
             res.status(201).json({ message: 'updated successfullu' });
         } catch (err) {
             console.log(`Error occured while creating a article`)
@@ -71,8 +71,8 @@ module.exports = {
 
 
             const id = req.params.id;
-            let articleDoc = await article.findbyIdAndDelete(id);
-            await User.findOneAndDelet({ email: articleDoc.email });
+            let articleDoc = await article.findByIdAndDelete(id);
+            
             res.status(201).json({ message: 'deleted successfullu' });
         } catch (err) {
             console.log(`Error occured while deleting a article`)

@@ -56,7 +56,7 @@ module.exports = {
 
 
             const id = req.params.id;
-            let studentDoc = await Student.findbyIdAndUpdate(id, req.body);
+            let studentDoc = await Student.findByIdAndUpdate(id, req.body);
             res.status(201).json({ message: 'updated successfullu' });
         } catch (err) {
             console.log(`Error occured while creating a student`)
@@ -71,11 +71,11 @@ module.exports = {
 
 
             const id = req.params.id;
-            let studentDoc = await Student.findbyIdAndDelete(id);
-            await User.findOneAndDelet({ email: studentDoc.email });
+            let studentDoc = await Student.findByIdAndDelete(id);
+            // await User.findOneAndDelet({ email: studentDoc.email });
             res.status(201).json({ message: 'deleted successfullu' });
         } catch (err) {
-            console.log(`Error occured while deleting a student`)
+            console.log(`Error occured while deleting a student ${err}`)
             res.status(500).json({ message: "internal server error" });
         }
     }

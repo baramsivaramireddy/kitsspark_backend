@@ -1,6 +1,6 @@
 const path = require('path');
 const User = require(path.resolve(DB_MODEL, 'user'));
-const teacher = require(path.resolve(DB_MODEL, 'teacher'));
+const regulation = require(path.resolve(DB_MODEL, 'regulation'));
 const dbconnect = require(path.resolve(__dirname, '..', 'dbconnect'));
 
 module.exports = {
@@ -12,12 +12,12 @@ module.exports = {
 
             await dbconnect();
 
-            const { email } = req.body;
+            const { name } = req.body;
 
-            let teacherDoc = await teacher.create({ email: email });
-            res.status(201).json({ _id: teacherDoc._id });
+            let regulationDoc = await regulation.create({ name: name });
+            res.status(201).json({ _id: regulationDoc._id });
         } catch (err) {
-            console.log(`Error occured while creating a teacher`)
+            console.log(`Error occured while creating a regulation`)
             res.status(500).json({ message: "internal server error" });
         }
     },
@@ -26,10 +26,10 @@ module.exports = {
         try {
 
             await dbconnect();
-            let teacherDocs = await teacher.find({});
-            res.status(200).json({ data: teacherDocs });
+            let regulationDocs = await regulation.find({});
+            res.status(200).json({ data: regulationDocs });
         } catch (err) {
-            console.log(`Error occured while searching teachers`)
+            console.log(`Error occured while searching regulations`)
             res.status(500).json({ message: "internal server error" });
         }
 
@@ -41,10 +41,10 @@ module.exports = {
 
             await dbconnect();
             const id = req.params.id;
-            let teacherDoc = await teacher.findbyId(id);
-            res.status({ data: teacherDoc });
+            let regulationDoc = await regulation.findbyId(id);
+            res.status({ data: regulationDoc });
         } catch (err) {
-            console.log(`Error occured while creating a teacher`)
+            console.log(`Error occured while creating a regulation`)
             res.status(500).json({ message: "internal server error" });
         }
     },
@@ -56,10 +56,10 @@ module.exports = {
 
 
             const id = req.params.id;
-            let teacherDoc = await teacher.findByIdAndUpdate(id, req.body);
+            let regulationDoc = await regulation.findByIdAndUpdate(id, req.body);
             res.status(201).json({ message: 'updated successfullu' });
         } catch (err) {
-            console.log(`Error occured while creating a teacher`)
+            console.log(`Error occured while creating a regulation`)
             res.status(500).json({ message: "internal server error" });
         }
     },
@@ -71,11 +71,10 @@ module.exports = {
 
 
             const id = req.params.id;
-            let teacherDoc = await teacher.findByIdAndDelete(id);
-            await User.findOneAndDelet({ email: teacherDoc.email });
+            let regulationDoc = await regulation.findByIdAndDelete(id);
             res.status(201).json({ message: 'deleted successfullu' });
         } catch (err) {
-            console.log(`Error occured while deleting a teacher`)
+            console.log(`Error occured while deleting a regulation`)
             res.status(500).json({ message: "internal server error" });
         }
     }
